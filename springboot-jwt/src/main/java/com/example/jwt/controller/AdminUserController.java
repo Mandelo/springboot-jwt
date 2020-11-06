@@ -1,11 +1,16 @@
 package com.example.jwt.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jwt.annotation.JwtIgnore;
 import com.example.jwt.common.response.Result;
 import com.example.jwt.entity.Audience;
+import com.example.jwt.module.system.entity.UserEntity;
+import com.example.jwt.module.system.service.UserService;
 import com.example.jwt.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,24 +27,37 @@ public class AdminUserController {
     @Resource
     private Audience audience;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/login")
     @JwtIgnore
     public Result adminLogin(HttpServletResponse response, String username, String password) {
-        // 这里模拟测试, 默认登录成功，返回用户ID和角色信息
-        String userId = UUID.randomUUID().toString();
         String role = "admin";
-
-        // 创建token
-        String token = JwtTokenUtil.createJWT(userId, username, role, audience);
-        log.info("### 登录成功, token={} ###", token);
-
-        // 将token放在响应头
-        response.setHeader(JwtTokenUtil.AUTH_HEADER_KEY, JwtTokenUtil.TOKEN_PREFIX + token);
-        // 将token响应给客户端
-        JSONObject result = new JSONObject();
-        result.put("token", token);
-        return Result.SUCCESS(result);
-
+        if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)){
+            UserEntity userEntity = userService.selectByUsername(username);
+            if(null == userEntity){
+                return Result.FAIL("-------------用户不存在-------------");
+            }else{
+                if(password.equals(userEntity.getPassword())){
+                    // 创建token
+                    String userId = userEntity.getId();
+                    String token = JwtTokenUtil.createJWT(userId, username, role, audience);
+                    log.info("### 登录成功, token={} ###", token);
+                    // 将token放在响应头
+                    response.setHeader(JwtTokenUtil.AUTH_HEADER_KEY, JwtTokenUtil.TOKEN_PREFIX + token);
+                    // 将token响应给客户端
+                    JSONObject result = new JSONObject();
+                    result.put("token", token);
+                    return Result.SUCCESS(result);
+                }else{
+                    return Result.FAIL("密码错误");
+                }
+            }
+        }else{
+            log.error("------------用户名或密码不能为空----------");
+            return Result.FAIL("用户名或密码不能为空");
+        }
     }
 
     @GetMapping("/users")
