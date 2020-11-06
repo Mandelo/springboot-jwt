@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import java.util.UUID;
 @RestController
 public class AdminUserController {
 
-    @Autowired
+    @Resource
     private Audience audience;
 
     @PostMapping("/login")
@@ -38,6 +39,7 @@ public class AdminUserController {
         JSONObject result = new JSONObject();
         result.put("token", token);
         return Result.SUCCESS(result);
+
     }
 
     @GetMapping("/users")

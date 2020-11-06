@@ -1,7 +1,5 @@
 package com.example.jwt.config;
 
-
-
 import com.example.jwt.realm.CustomRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -11,7 +9,6 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +27,7 @@ public class ShiroConfig {
     //将自己的验证方式加入容器
     @Bean
     public CustomRealm myShiroRealm() {
-        CustomRealm customRealm = new CustomRealm();
-        return customRealm;
+        return new CustomRealm();
     }
 
     //权限管理，配置主要是Realm的管理认证
@@ -61,7 +57,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
     }
-
 
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
