@@ -15,7 +15,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-
 #####JWT配置#####
 audience:
   # 代表这个JWT的接收对象,存入audience
