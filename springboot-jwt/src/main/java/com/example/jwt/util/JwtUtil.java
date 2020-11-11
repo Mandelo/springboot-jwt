@@ -13,7 +13,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Slf4j
-public class JwtTokenUtil {
+public class JwtUtil {
 
     public static final String AUTH_HEADER_KEY = "Authorization";
 

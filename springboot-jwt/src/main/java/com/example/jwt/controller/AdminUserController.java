@@ -1,14 +1,12 @@
 package com.example.jwt.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jwt.annotation.JwtIgnore;
 import com.example.jwt.common.response.Result;
 import com.example.jwt.entity.Audience;
 import com.example.jwt.module.system.entity.UserEntity;
 import com.example.jwt.module.system.service.UserService;
-import com.example.jwt.util.JwtTokenUtil;
+import com.example.jwt.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -42,10 +39,10 @@ public class AdminUserController {
                 if(password.equals(userEntity.getPassword())){
                     // 创建token
                     String userId = userEntity.getId();
-                    String token = JwtTokenUtil.createJWT(userId, username, role, audience);
+                    String token = JwtUtil.createJWT(userId, username, role, audience);
                     log.info("### 登录成功, token={} ###", token);
                     // 将token放在响应头
-                    response.setHeader(JwtTokenUtil.AUTH_HEADER_KEY, JwtTokenUtil.TOKEN_PREFIX + token);
+                    response.setHeader(JwtUtil.AUTH_HEADER_KEY, JwtUtil.TOKEN_PREFIX + token);
                     // 将token响应给客户端
                     JSONObject result = new JSONObject();
                     result.put("token", token);
