@@ -31,10 +31,10 @@ public class Base64Util {
     }
 
     /**
-     * 加密方法。
+     * encode 加密方法
      *
-     * @param data
-     * @return
+     * @param data data
+     * @return {@link String}
      */
     public static String encode(String data) {
         try {

@@ -6,7 +6,7 @@ import com.example.jwt.common.response.Result;
 import com.example.jwt.entity.Audience;
 import com.example.jwt.module.system.entity.UserEntity;
 import com.example.jwt.module.system.service.UserService;
-import com.example.jwt.util.JwtUtil;
+import com.example.jwt.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,10 @@ public class AdminUserController {
                 if(password.equals(userEntity.getPassword())){
                     // 创建token
                     String userId = userEntity.getId();
-                    String token = JwtUtil.createJWT(userId, username, role, audience);
+                    String token = JwtTokenUtil.createJWT(userId, username, role, audience);
                     log.info("### 登录成功, token={} ###", token);
                     // 将token放在响应头
-                    response.setHeader(JwtUtil.AUTH_HEADER_KEY, JwtUtil.TOKEN_PREFIX + token);
+                    response.setHeader(JwtTokenUtil.AUTH_HEADER_KEY, JwtTokenUtil.TOKEN_PREFIX + token);
                     // 将token响应给客户端
                     JSONObject result = new JSONObject();
                     result.put("token", token);
